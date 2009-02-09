@@ -10,10 +10,10 @@
   <email>lee@php.uk.com</email>
   <active>yes</active>
  </lead>
- <date>2008-12-08</date>
+ <date>2009-02-09</date>
  <time>10:30:35</time>
  <version>
-  <release>1.0.6</release>
+  <release>1.0.7</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -27,12 +27,12 @@
    <file role="data" name="README" />
    <file role="data" name="LICENSE" />
    <dir name="config">
-    <file role="data" name="config_handlers.yml" />
     <file role="data" name="config.php" />
    </dir>
    <dir name="lib">
 	<file role="data" name="sfErrorHandler.class.php" />
 	<file role="data" name="sfHardenedRenderingFilter.class.php" />
+	<file role="data" name="sfHardenedRenderingFilterCompat.class.php" />
 	<file role="data" name="sfLegacyErrorException.class.php" />
    </dir>
    <dir name="errors">
@@ -51,7 +51,7 @@
    <package>
     <name>symfony</name>
     <channel>pear.symfony-project.com</channel>
-    <min>1.1.0</min>
+    <min>1.0</min>
     <max>1.2.0</max>
    </package>
   </required>

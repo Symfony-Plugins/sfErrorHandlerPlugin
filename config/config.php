@@ -19,5 +19,10 @@
 
 if (in_array('sfErrorHandler', sfConfig::get('sf_enabled_modules', array())))
 {
-  sfConfig::set('sf_rendering_filter', array('sfHardenedRenderingFilter', array()));
+  if (defined('SYMFONY_VERSION'))
+  {
+    sfConfig::set('sf_rendering_filter', array('sfHardenedRenderingFilter', array()));
+  } else {
+    sfConfig::set('sf_rendering_filter', array('sfHardenedRenderingFilterCompat', array()));
+  }
 }

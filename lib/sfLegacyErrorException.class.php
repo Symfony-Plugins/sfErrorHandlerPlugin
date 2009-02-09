@@ -23,7 +23,6 @@ class sfLegacyErrorException extends sfException
 
   public function __construct($code, $message, $file, $line, $context = null)
   {
-
     parent::__construct($message, $code);
 
     $this->context  = $context;

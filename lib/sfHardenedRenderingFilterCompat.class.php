@@ -8,7 +8,7 @@
  */
 
 /**
- * sfHardenedRenderingFilter is a replacement for the sfRenderingFilter
+ * sfHardenedRenderingFilterCompat is a replacement for the sfRenderingFilter in Symfony 1.0
  * The sfHardenedRenderingFilter dynamically replaces the sfRenderingFilter for an app
  * when the sfErrorHandler is one of the enabled modules
  *
@@ -17,7 +17,7 @@
  * @version    SVN: $Id$
  */
 
-class sfHardenedRenderingFilter extends sfFilter
+class sfHardenedRenderingFilterCompat extends sfFilter
 {
   /**
    * Log filter activity
@@ -27,7 +27,7 @@ class sfHardenedRenderingFilter extends sfFilter
    */
   public function log($message, $level = sfLogger::DEBUG)
   {
-    sfContext::getInstance()->getLogger()->log('{sfHardenedRenderingFilter} '.$message, $level);
+    sfContext::getInstance()->getLogger()->log('{sfHardenedRenderingFilterCompat} '.$message, $level);
   }
   
   /**
@@ -63,44 +63,32 @@ class sfHardenedRenderingFilter extends sfFilter
       
     } catch (sfLegacyErrorException $e) {
       ob_clean(); // don't care what's in the buffer, we've got all we need
-      throw sfException::createFromException($e);
+      throw new sfException($e->getMessage(), $e->getCode());
     } catch (sfStopException $e) {
       // do nothing, these are expected (and therefore need to be caught)
     } catch (Exception $e) {
       ob_clean(); // don't care what's in the buffer, we've got all we need
-      throw sfException::createFromException($e);
+      throw new sfException($e->getMessage(), $e->getCode());
     }
     
     ob_end_clean(); // no need for output buffering from here...
-    
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Render to the client')));
-    }
-
-    // hack to rethrow sfForm and|or sfFormField __toString() exceptions (see sfForm and sfFormField)
-    if (sfForm::hasToStringException())
-    {
-      throw sfForm::getToStringException();
-    }
-    else if (sfFormField::hasToStringException())
-    {
-      throw sfFormField::getToStringException();
-    }
-    else if (sfErrorHandler::hasFatalException())
-    {
-      throw sfException::createFromException(sfErrorHandler::getFatalException());
-    }
     
     try {
       // get response object
       $response = $this->context->getResponse();
     
-      // send headers + content
-      $response->send();
+      // send headers
+      if (method_exists($response, 'sendHttpHeaders'))
+      {
+        $response->sendHttpHeaders();
+      }
+
+      // send content
+      $response->sendContent();
+      
     } catch (sfLegacyErrorException $e) {
       // why does this always get thrown???
-      //throw sfException::createFromException($e);
+      //throw new sfException($e->getMessage(), $e->getCode())
     }
   }
   
