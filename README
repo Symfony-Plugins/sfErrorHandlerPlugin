@@ -1,4 +1,4 @@
-sfErrorHandler plugin (for Symfony 1.1)
+sfErrorHandler plugin (for Symfony 1.0, Symfony 1.1 and Symfony 1.2)
 =======================================
 
 The `sfErrorHandlerPlugin` aims to solve the infamous Symfony white screen of death. It also features an error handler that converts PHP errors to sfLegacyErrorExceptions, so that they can be caught within your code, and dealt with appropriately. This should both greatly reduce time spent debugging Symfony applications during development, and make Symfony applications appear more robust in production.
@@ -28,7 +28,7 @@ Installation
 
 ## Usage ##
 
-You can check that the plugin is correctly installed by using your dev controller. If you select the 'Logs and Messages' option, you should see that there is now a log entry for `sfHardenedRenderingFilter` where there was once a log entry for `sfRenderingFilter`.
+You can check that the plugin is correctly installed by using your dev controller. If you select the 'Logs and Messages' option, you should see that there is now a log entry for `sfHardenedRenderingFilter` (or `sfHardenedRenderingFilterCompat` on Symfony 1.0) where there was once a log entry for `sfRenderingFilter`.
 
 Now, whenever an error occurs that would previously have caused a white screen you should observe the following behaviour:
 

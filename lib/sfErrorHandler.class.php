@@ -66,7 +66,7 @@ class sfErrorHandler
     
     // we can't specify a bitmask for error logging to ob_start, so we have
     // to manually filter... (we don't want anything that the error_handler can handle)
-    if (in_array($error['type'], self::$filtered_errors) || $error['type'] > E_USER_ERROR) return false;
+    if (in_array($error['type'], self::$filtered_errors) || $error['type'] >= E_USER_ERROR) return false;
     
     if (!sfConfig::get('sf_debug'))
     {
