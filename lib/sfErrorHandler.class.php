@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the sfErrorHandler plugin
- * (c) 2008 Lee Bolding <lee@php.uk.com>
+ * (c) 2008-2009 Lee Bolding <lee@php.uk.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -46,6 +46,11 @@ class sfErrorHandler
 
   public static function error_handler($code, $message, $file, $line, $context = null)
   {
+    // if error has been supressed with an @
+    if (error_reporting() == 0) {
+        return;
+    }
+    
     // instantiate a LegacyErrorException ...
     $le = new sfLegacyErrorException($code, $message, $file, $line, $context);
     // now throw the exception

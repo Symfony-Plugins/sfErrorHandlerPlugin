@@ -10,10 +10,10 @@
   <email>lee@php.uk.com</email>
   <active>yes</active>
  </lead>
- <date>2009-03-02</date>
- <time>10:30:35</time>
+ <date>2009-05-02</date>
+ <time>11:35:00</time>
  <version>
-  <release>1.0.8</release>
+  <release>1.0.9</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -52,7 +52,7 @@
     <name>symfony</name>
     <channel>pear.symfony-project.com</channel>
     <min>1.0</min>
-    <max>1.2.9</max>
+    <max>1.2.7</max>
    </package>
   </required>
  </dependencies>

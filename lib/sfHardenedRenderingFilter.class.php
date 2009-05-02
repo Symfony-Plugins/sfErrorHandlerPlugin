@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the sfErrorHandler plugin
- * (c) 2008 Lee Bolding <lee@php.uk.com>
+ * (c) 2008-2009 Lee Bolding <lee@php.uk.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,7 +27,7 @@ class sfHardenedRenderingFilter extends sfFilter
    */
   public function log($message, $level = sfLogger::DEBUG)
   {
-    sfContext::getInstance()->getLogger()->log('{sfHardenedRenderingFilter} '.$message, $level);
+    sfContext::getInstance()->getLogger()->log('{sfHardenedRenderingFilter} ' . $message, $level);
   }
   
   /**
@@ -65,6 +65,8 @@ class sfHardenedRenderingFilter extends sfFilter
       ob_clean(); // don't care what's in the buffer, we've got all we need
       throw sfException::createFromException($e);
     } catch (sfStopException $e) {
+      // do nothing, these are expected (and therefore need to be caught)
+    } catch (sfSecurityException $e) {
       // do nothing, these are expected (and therefore need to be caught)
     } catch (Exception $e) {
       ob_clean(); // don't care what's in the buffer, we've got all we need
