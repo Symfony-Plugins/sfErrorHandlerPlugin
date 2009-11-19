@@ -3,7 +3,7 @@
  <name>sfErrorHandlerPlugin</name>
  <channel>plugins.symfony-project.org</channel>
  <summary>Enhanced error handling for Symfony</summary>
- <description>Aims to catch and deal with most, if not all, errors within Symfony</description>
+ <description>Removes white screen of death problem, hardens your production application, catching errors</description>
  <lead>
   <name>Lee BOLDING</name>
   <user>leesbian</user>
@@ -52,7 +52,7 @@
     <name>symfony</name>
     <channel>pear.symfony-project.com</channel>
     <min>1.0</min>
-    <max>1.2.7</max>
+    <max>1.2.8</max>
    </package>
   </required>
  </dependencies>

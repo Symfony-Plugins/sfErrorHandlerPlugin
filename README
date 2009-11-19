@@ -1,7 +1,8 @@
 sfErrorHandler plugin (for Symfony 1.0, Symfony 1.1 and Symfony 1.2)
 =======================================
 
-The `sfErrorHandlerPlugin` aims to solve the infamous Symfony white screen of death. It also features an error handler that converts PHP errors to sfLegacyErrorExceptions, so that they can be caught within your code, and dealt with appropriately. This should both greatly reduce time spent debugging Symfony applications during development, and make Symfony applications appear more robust in production.
+The `sfErrorHandlerPlugin` will make your Symfony development quicker and more painless by removing the infamous `Symfony white screen of death` and will make your production applications more stable by catching (and dealing with) any uncaught exceptions.
+It also features an error handler that converts PHP errors to `sfLegacyErrorExceptions`, so that they can be caught within your code, and dealt with appropriately. This should both greatly reduce time spent debugging Symfony applications during development, and make Symfony applications appear more robust in production.
 
 
 Installation
@@ -44,3 +45,8 @@ Now, whenever an error occurs that would previously have caused a white screen y
 ## NOTES ##
 
 I've tested this quite extensively by purposefully breaking code, introducing parse errors, instantiating non-existent classes and or using undefined classes, and haven't been able to produce a white screen, but if you are able to do so, please send me details of how I can replicate the problem to lee at php.uk.com and I'll try and fix it :)
+
+##ÊCHANGE LOG ##
+
+Contribution from Martin Schnabel <mcnilz@gmail.com> to place errors generated in dev environment into debug toolbar
+Contributions from Jussi Holm <jusssih@gmail.com> to stop double rendering of error when sfStopException encountered, and setting of HTTP header to 500 upon error

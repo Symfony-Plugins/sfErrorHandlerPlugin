@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the sfErrorHandler plugin
- * (c) 2008-2009 Lee Bolding <lee@php.uk.com>
+ * (c) 2008-2009 PHP (UK) Ltd <http://php.uk.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,6 +14,7 @@
  *
  * @package    sfErrorHandlerPlugin
  * @see        sfLegacyErrorException
+ * @copyright	 Copyright (c) 2008-2009, PHP (UK) Ltd
  * @author     Lee Bolding <lee@php.uk.com>
  * @version    SVN: $Id$
  */
@@ -23,9 +24,10 @@ class sfErrorHandler
   private static $instance = null;
   protected static $exception = null;
   private static $filtered_errors = array(E_WARNING, E_NOTICE, E_STRICT);
+  private static $errors_debug = null;
 
   private function __construct() {
-    set_error_handler(array(__CLASS__, 'error_handler'));
+    //set_error_handler(array(__CLASS__, 'error_handler'));
   }
 
   public function destruct()
@@ -52,11 +54,36 @@ class sfErrorHandler
     }
     
     // instantiate a LegacyErrorException ...
-    $le = new sfLegacyErrorException($code, $message, $file, $line, $context);
+    //$le = new sfLegacyErrorException($code, $message, $file, $line, $context);
     // now throw the exception
-    throw $le;
+    //throw $le;
+    if (!is_array(self::$errors_debug))
+    {
+      self::$errors_debug = array();
+      $dispatcher = sfContext::getInstance()->getEventDispatcher();
+      $dispatcher->connect('debug.web.load_panels', array('sfErrorHandler', 'configureWebDebugToolbar'));
+    }
+
+    self::$errors_debug[] = array(
+      'code'    => $code,
+      'message' => $message,
+      'file'    => $file,
+      'line'    => $line
+    );
+
+    return true;
   }
-  
+
+	public static function configureWebDebugToolbar(sfEvent $event)
+  {
+    $webDebugToolbar = $event->getSubject();
+    $webDebugToolbar->setPanel('errors', new sfWebDebugPanelErrors($webDebugToolbar));
+  }
+
+  public static function getErrors()
+  {
+    return self::$errors_debug;
+  }
   
   // can't seem to throw an exception here due to always receiving an error :
   // Exception thrown without a stack frame in Unknown on line 0
@@ -68,6 +95,15 @@ class sfErrorHandler
     
     // this should never happen, but if $error isn't an array, return false
     if (!is_array($error)) return false;
+		
+    // The above comment is not quite true. This function is used as
+    // callback for ob_start, which means it's an output processor function.
+    // error_get_last() returning non-array means that no error has occurred,
+    // and we should return false, specifying that we don't want to modify
+    // the ob contents before sending to client.
+
+    // We have an error, lets announce that with headers:
+    header('HTTP/1.0 500 Internal Server Error');
     
     // we can't specify a bitmask for error logging to ob_start, so we have
     // to manually filter... (we don't want anything that the error_handler can handle)

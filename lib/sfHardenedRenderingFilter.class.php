@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of the sfErrorHandler plugin
- * (c) 2008-2009 Lee Bolding <lee@php.uk.com>
+ * (c) 2008-2009 PHP (UK) Ltd <http://php.uk.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -42,18 +42,17 @@ class sfHardenedRenderingFilter extends sfFilter
   {
     if ($this->isFirstCall())
     {
-      ob_start(array("sfErrorHandler", "fatal_error_handler"));
+      ob_start(array('sfErrorHandler', 'fatal_error_handler'));
       
-      // if we're in a prod environment we want E_ALL, but not to fail on E_NOTICE, E_WARN or E_STRICT
+      // if we're in a prod environment we want E_ALL, but not to fail on E_NOTICE, E_WARNING or E_STRICT
       if (!sfConfig::get('sf_debug'))
       {
-        set_error_handler(array("sfErrorHandler", "error_handler"), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE & ~E_WARN));
-        //$this->log("set error_reporting to : " . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
-      }
-      else {
+        set_error_handler(array('sfErrorHandler', 'error_handler'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING));
+        //$this->log('set error_reporting to : ' . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
+      } else {
         // get from config or default to E_ALL without E_NOTICE (those E_NOTICEs can get annoying...)
-        set_error_handler(array("sfErrorHandler", "error_handler"), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
-        //$this->log("set error_reporting to : " . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
+        set_error_handler(array('sfErrorHandler', 'error_handle'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
+        //$this->log('set error_reporting to : ' . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
       }
     }
     
@@ -65,9 +64,11 @@ class sfHardenedRenderingFilter extends sfFilter
       ob_clean(); // don't care what's in the buffer, we've got all we need
       throw sfException::createFromException($e);
     } catch (sfStopException $e) {
-      // do nothing, these are expected (and therefore need to be caught)
+      // sfStopExceptions are thrown on sfAction::forward() and need to be rethrown to be properly handled
+      throw $e;
     } catch (sfSecurityException $e) {
-      // do nothing, these are expected (and therefore need to be caught)
+	    // sfSecurityExceptions are thrown by sfGuard and the security system, and need to be rethrown to be properly handled
+      throw $e;
     } catch (Exception $e) {
       ob_clean(); // don't care what's in the buffer, we've got all we need
       throw sfException::createFromException($e);
