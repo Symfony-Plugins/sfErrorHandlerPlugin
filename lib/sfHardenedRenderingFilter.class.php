@@ -51,7 +51,7 @@ class sfHardenedRenderingFilter extends sfFilter
         //$this->log('set error_reporting to : ' . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
       } else {
         // get from config or default to E_ALL without E_NOTICE (those E_NOTICEs can get annoying...)
-        set_error_handler(array('sfErrorHandler', 'error_handle'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
+        set_error_handler(array('sfErrorHandler', 'error_handler'), sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
         //$this->log('set error_reporting to : ' . sfConfig::get('sf_error_reporting', E_ALL & ~E_NOTICE));
       }
     }
